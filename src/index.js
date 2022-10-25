@@ -42,8 +42,10 @@ async function start(fields) {
 
   const docs = parseDocuments($)
   await saveBills(docs, fields, {
-    identifiers: ['ekwateur'],
-    fileIdAttributes: ['vendorRef']
+    identifiers: ['Ekwateur'],
+    fileIdAttributes: ['vendorRef'],
+    sourceAccount: this.accountId,
+    sourceAccountIdentifier: fields.login
   })
   await downloadProofOfResidence(fields)
 }
@@ -139,7 +141,12 @@ async function downloadProofOfResidence(fields) {
       }
     }
   ]
-  return saveFiles(files, fields)
+  return saveFiles(files, fields, {
+    identifiers: ['Ekwateur'],
+    fileIdAttributes: ['filename'],
+    sourceAccount: this.accountId,
+    sourceAccountIdentifier: fields.login
+  })
 }
 
 function parseDocuments($) {
@@ -156,7 +163,13 @@ function parseDocuments($) {
       },
       amount: {
         sel: 'td[class="table__body__price"]',
-        parse: val => parseFloat(val.slice(0, -1).replaceAll(' ' ,'').replace(',', '.'))
+        parse: val =>
+          parseFloat(
+            val
+              .slice(0, -1)
+              .replaceAll(' ', '')
+              .replace(',', '.')
+          )
       },
       type: {
         sel: 'td:nth-child(3)'
