@@ -141,7 +141,12 @@ async function downloadProofOfResidence(fields) {
       }
     }
   ]
-  return saveFiles(files, fields)
+  return saveFiles(files, fields, {
+    identifiers: ['Ekwateur'],
+    fileIdAttributes: ['filename'],
+    sourceAccount: this.accountId,
+    sourceAccountIdentifier: fields.login
+  })
 }
 
 function parseDocuments($) {
